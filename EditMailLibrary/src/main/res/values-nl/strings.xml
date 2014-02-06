@@ -1,0 +1,7 @@
+<resources>
+    <string name="email_domain_unknown">Het ingegeven domein bestaat niet. Typfout?</string>
+    <string name="email_no_mx">Het ingegeven domein kan geen emails ontvangen</string>
+    <string name="email_did_you_mean">Bedoel je %s?</string>
+    <string name="email_address_incompleat">Het emailadres is niet compleet</string>
+    <string name="email_schema_error">Je emailadres heeft een typfout</string>
+</resources>

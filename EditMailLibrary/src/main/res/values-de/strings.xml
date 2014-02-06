@@ -1,0 +1,7 @@
+<resources>
+    <string name="email_domain_unknown">Die eingegebene Domain existiert nicht. Tippfehler?</string>
+    <string name="email_no_mx">Die eingegebene Domain kann keine E-Mails empfangen</string>
+    <string name="email_did_you_mean">Meintest du %s?</string>
+    <string name="email_address_incompleat">Die E-Mail Adresse ist unvollständig</string>
+    <string name="email_schema_error">Die E-Mail Adresse hat einen Tippfehler</string>
+</resources>

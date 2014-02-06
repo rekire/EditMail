@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EditMail</string>
+    <string name="email_domain_unknown">The entered domain does not exists. Typo?</string>
+    <string name="email_no_mx">The entered domain cannot receive emails</string>
+    <string name="email_did_you_mean">Did you mean %s?</string>
+    <string name="email_address_incompleat">The email address is not complete</string>
+    <string name="email_schema_error">The email address has a typo</string>
+</resources>
