@@ -30,4 +30,6 @@ android {
 
 dependencies {
     compile 'dnsjava:dnsjava:+'
+    compile 'eu.rekisoft.android:lazyworker:1.0.+'
+    compile 'eu.rekisoft.android:uiworker:1.0.+'
 }

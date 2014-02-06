@@ -1,1 +1,1 @@
-include ':EditMailLibrary', ':LazyWorker'
+include ':EditMailLibrary'
