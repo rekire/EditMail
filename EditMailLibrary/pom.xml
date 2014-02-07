@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>eu.rekisoft.android</groupId>
+    <artifactId>editmail</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.0</version>
+    <name>EditMail</name>
+    <url>https://github.com/rekire/EditMail/</url>
+    <description>A smart control for entering email addresses with automatically checking if the domain exists and if the domain can receive emails.</description>
+    <scm>
+        <url>git@github.com:rekire/EditMail.git</url>
+        <tag>1.0.0</tag>
+        <connection>https://help.github.com/articles/which-remote-url-should-i-use</connection>
+    </scm>
+    <issueManagement>
+        <url>https://github.com/rekire/EditMail/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+    <inceptionYear>2013</inceptionYear>
+    <licenses>
+        <license>
+            <name>Rekisoft Public License (RKSPL)</name>
+            <url>http://www.rekisoft.eu/licenses/rkspl.html</url>
+            <comments>This code is licensed under the Rekisoft Public License.</comments>
+        </license>
+    </licenses>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.rekisoft.android</groupId>
+            <artifactId>uiworker</artifactId>
+            <version>1.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.rekisoft.android</groupId>
+            <artifactId>lazyworker</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

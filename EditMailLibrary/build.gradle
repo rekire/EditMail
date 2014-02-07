@@ -30,6 +30,8 @@ android {
 
 dependencies {
     compile 'dnsjava:dnsjava:+'
-    compile 'eu.rekisoft.android:lazyworker:1.0.+'
-    compile 'eu.rekisoft.android:uiworker:1.0.+'
+    compile 'eu.rekisoft.android:lazyworker:1.0.0'
+    compile 'eu.rekisoft.android:uiworker:1.0.1'
 }
+
+apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
