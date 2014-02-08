@@ -27,7 +27,7 @@ This will generate a normal EditText which shows errors if the email address can
 In case of network trouble nothing no errors will be shown.
 
 ##License
-This code is licensed under the [Rekisoft Public License][rkspl].
+This code is licensed under the [Rekisoft Public License][rkspl].  
 See [http://www.rekisoft.eu/licenses/rkspl.html][rkspl] for more informations.
 
 ##TODO
