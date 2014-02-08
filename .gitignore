@@ -34,3 +34,12 @@ proguard/
 
 # Everything else
 .DS_Store
+
+# special rules for master
+.idea/
+gradle/
+*.iml
+*.bat
+gradlew
+pom.xml
+atlassian-ide-plugin.xml
