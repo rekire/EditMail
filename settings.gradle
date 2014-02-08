@@ -1,1 +1,1 @@
-include ':EditMailLibrary', ':Sample'
+include ':EditMailLibrary', ':SampleApp'

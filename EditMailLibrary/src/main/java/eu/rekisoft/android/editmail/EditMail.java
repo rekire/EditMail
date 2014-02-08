@@ -92,7 +92,7 @@ public class EditMail extends EditText {
      * @see #EditMail(Context, AttributeSet)
      */
     public EditMail(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+        super(context, attrs, android.R.attr.editTextStyle);
 
         setInputType(getInputType() | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 

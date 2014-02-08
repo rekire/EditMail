@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 apply plugin: 'android-library'
@@ -14,7 +14,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.0"
+    buildToolsVersion "19.0.1"
 
     defaultConfig {
         minSdkVersion 7
@@ -30,8 +30,8 @@ android {
 
 dependencies {
     compile 'dnsjava:dnsjava:+'
-    compile 'eu.rekisoft.android:lazyworker:1.0.0'
-    compile 'eu.rekisoft.android:uiworker:1.0.1'
+    compile 'eu.rekisoft.android:lazyworker:1.0.+'
+    compile 'eu.rekisoft.android:uiworker:1.0.+'
 }
 
-apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+//apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'

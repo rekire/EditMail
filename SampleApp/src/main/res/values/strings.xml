@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EditMail Demo</string>
+    <string name="intro">Welcome to this demo app.\nPlease enter an email address to test below:</string>
+    <string name="notes"><b>Privacy notes:</b> No inputs are stored and no email addresses are sent out. It is just possible that you ISP or network administrator could see some DNS requests, this is required to check if that domain exists and if it can receive emails.</string>
+</resources>

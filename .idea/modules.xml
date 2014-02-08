@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EditMailLibrary/EditMailLibrary.iml" filepath="$PROJECT_DIR$/EditMailLibrary/EditMailLibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/EditMailProject.iml" filepath="$PROJECT_DIR$/EditMailProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SampleApp/SampleApp.iml" filepath="$PROJECT_DIR$/SampleApp/SampleApp.iml" />
     </modules>
   </component>
 </project>

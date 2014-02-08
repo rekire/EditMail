@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EditMail Demo</string>
+    <string name="intro">Willkommen in dieser Demo App.\nBitte gebe eine E-Mail Adresse ein:</string>
+    <string name="notes"><b>Zum Datenschutz:</b> Keine Eingaben werden übertragen oder gespeichert. Es ist jedoch möglich das dein Internetanbieter oder dein Netzwerkadministrator DNS anfragen sieht, dass ist otwendig um zu überprüfen ob die Domain existiert und ob diese E-Mails empfangen kann.</string>
+</resources>

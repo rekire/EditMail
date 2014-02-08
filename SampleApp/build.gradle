@@ -14,11 +14,11 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.0"
+    buildToolsVersion '19.0.1'
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 16
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
     }
@@ -32,4 +32,6 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
+    //compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    compile project(':EditMailLibrary')
 }
