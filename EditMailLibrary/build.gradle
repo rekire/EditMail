@@ -7,6 +7,20 @@ buildscript {
     }
 }
 apply plugin: 'android-library'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+def mavenVersion = "1.0.0"
+def mavenArtifactId = "editmail"
+def mavenGroup = "eu.rekisoft.android"
+def mavenDescription = "A smart control for entering email addresses with automatically checking if the domain exists and if the domain can receive emails"
+def githubNickname= "rekire"
+def githubProject = "EditMail"
+def author="René Kilczan"
+def licenseName="Rekisoft Public License (RKSPL)"
+def licenseUrl="http://www.rekisoft.eu/licenses/rkspl.html"
+def licenseComment="This code is licensed under the Rekisoft Public License."
+def inceptionYear=2013
 
 repositories {
     mavenCentral()
@@ -35,3 +49,105 @@ dependencies {
 }
 
 //apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+
+// copy of https://github.com/keyboardsurfer/Crouton/blob/master/library/build.gradle
+
+android.libraryVariants.all { variant ->
+    def name = variant.buildType.name
+    if (name.equals(com.android.builder.BuilderConstants.DEBUG)) {
+        return; // Skip debug builds.
+    }
+    task("javadoc${variant.name.capitalize()}", type: Javadoc) {
+        description "Generates Javadoc for $variant.name."
+        source = variant.javaCompile.source
+        ext.androidJar = "${android.plugin.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+        classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+    }
+
+    task("bundleJavadoc${variant.name.capitalize()}", type: Jar) {
+        description "Bundles Javadoc into zip for $variant.name."
+        classifier = "javadoc"
+        from tasks["javadoc${variant.name.capitalize()}"]
+    }
+
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java
+}
+
+task jar(type: Jar) {
+    from 'build/classes/release'
+}
+
+task javadocJar(type: Jar, dependsOn: "javadocRelease") {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+    archives jar
+}
+
+
+task wrapper(type: Wrapper) {
+    description "Generates the gradle wrapper"
+    gradleVersion = "1.10"
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            //repository(url: repositoryUrl) {
+            //    authentication(userName: sonatypeUser, password: sonatypePass)
+            //}
+
+            pom.project {
+                //inceptionYear inceptionYear
+                name githubProject
+                //groupId mavenGroupId
+                artifactId mavenArtifactId
+                packaging 'jar', 'aar'
+                description mavenDescription
+                url 'https://github.com/'+githubNickname+'/'+githubProject
+
+                scm {
+                    url 'scm:git@github.com:'+githubNickname+'/'+githubProject+'.git'
+                    connection 'scm:git@github.com:'+githubNickname+'/'+githubProject+'.git'
+                    tag mavenVersion
+                    developerConnection 'scm:git@github.com:'+githubNickname+'/'+githubProject+'.git'
+                }
+
+                issueManagement {
+                    url 'https://github.com/'+githubNickname+'/'+githubProject+'/issues'
+                    system 'GitHub Issues'
+                }
+
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                        //comment licenseComment
+                        //distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id githubNickname
+                        name author
+                    }
+                }
+            }
+        }
+    }
+}
