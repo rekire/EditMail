@@ -32,6 +32,9 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
-    //compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    compile project(':EditMailLibrary')
+    //compile project(':EditMailLibrary')
+    compile 'eu.rekisoft.android:editmail:+@aar'
+    compile 'eu.rekisoft.android:uiworker:1.0.+'
+    compile 'eu.rekisoft.android:lazyworker:1.0.+'
+    compile 'dnsjava:dnsjava:+'
 }
