@@ -10,17 +10,27 @@ apply plugin: 'android-library'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
+
+version = "1.0.0"
+group = "eu.rekisoft.android"
+
 def mavenVersion = "1.0.0"
 def mavenArtifactId = "editmail"
-def mavenGroup = "eu.rekisoft.android"
+def mavenGroupId = "eu.rekisoft.android"
 def mavenDescription = "A smart control for entering email addresses with automatically checking if the domain exists and if the domain can receive emails"
 def githubNickname= "rekire"
 def githubProject = "EditMail"
-def author="RenÃ© Kilczan"
+def author="René Kilczan"
 def licenseName="Rekisoft Public License (RKSPL)"
 def licenseUrl="http://www.rekisoft.eu/licenses/rkspl.html"
 def licenseComment="This code is licensed under the Rekisoft Public License."
-def inceptionYear=2013
+def theInceptionYear=2013
+
+configurations {
+    archives {
+        extendsFrom configurations.default
+    }
+}
 
 repositories {
     mavenCentral()
@@ -43,9 +53,9 @@ android {
 }
 
 dependencies {
-    compile 'dnsjava:dnsjava:+'
-    compile 'eu.rekisoft.android:lazyworker:1.0.+'
-    compile 'eu.rekisoft.android:uiworker:1.0.+'
+    compile 'dnsjava:dnsjava:2.1.1'
+    compile 'eu.rekisoft.android:lazyworker:1.0.0'
+    compile 'eu.rekisoft.android:uiworker:1.0.1'
 }
 
 //apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
@@ -103,51 +113,51 @@ signing {
 }
 
 uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    configuration = configurations.archives
+    repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            //repository(url: repositoryUrl) {
-            //    authentication(userName: sonatypeUser, password: sonatypePass)
-            //}
+        repository(url: sonatypeRepo) {
+            authentication(userName: sonatypeUser, password: sonatypePass)
+        }
 
-            pom.project {
-                //inceptionYear inceptionYear
-                name githubProject
-                //groupId mavenGroupId
-                artifactId mavenArtifactId
-                packaging 'jar', 'aar'
-                description mavenDescription
-                url 'https://github.com/'+githubNickname+'/'+githubProject
+        pom.project {
+            inceptionYear theInceptionYear
+            name githubProject
+            groupId mavenGroupId
+            version mavenVersion
+            artifactId mavenArtifactId
+            packaging 'aar'
+            description mavenDescription
+            url 'https://github.com/'+githubNickname+'/'+githubProject
 
-                scm {
-                    url 'scm:git@github.com:'+githubNickname+'/'+githubProject+'.git'
-                    connection 'scm:git@github.com:'+githubNickname+'/'+githubProject+'.git'
-                    tag mavenVersion
-                    developerConnection 'scm:git@github.com:'+githubNickname+'/'+githubProject+'.git'
-                }
+            scm {
+                url 'scm:git@github.com:'+githubNickname+'/'+githubProject+'.git'
+                connection 'scm:git@github.com:'+githubNickname+'/'+githubProject+'.git'
+                tag mavenVersion
+                developerConnection 'scm:git@github.com:'+githubNickname+'/'+githubProject+'.git'
+            }
 
-                issueManagement {
-                    url 'https://github.com/'+githubNickname+'/'+githubProject+'/issues'
-                    system 'GitHub Issues'
-                }
+            issueManagement {
+                url 'https://github.com/'+githubNickname+'/'+githubProject+'/issues'
+                system 'GitHub Issues'
+            }
 
-                licenses {
-                    license {
-                        name licenseName
-                        url licenseUrl
-                        //comment licenseComment
-                        //distribution 'repo'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id githubNickname
-                        name author
-                    }
+            licenses {
+                license {
+                    name licenseName
+                    url licenseUrl
+                    //comment licenseComment
+                    //distribution 'repo'
                 }
             }
-        }
+
+            developers {
+                developer {
+                    id githubNickname
+                    name author
+                }
+            }
+        }.writeTo("$buildDir/libs/pom.xml")
     }
 }
