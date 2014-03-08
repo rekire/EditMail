@@ -26,6 +26,15 @@ Minimal example when using xml layout files:
 This will generate a normal EditText which shows errors if the email address cannot be validated.
 In case of network trouble nothing no errors will be shown.
 
+In your gradle file you have to add this dependencies:
+
+    compile 'eu.rekisoft.android:editmail:+@aar'
+    compile 'eu.rekisoft.android:uiworker:1.0.+'
+    compile 'eu.rekisoft.android:lazyworker:1.0.+'
+    compile 'dnsjava:dnsjava:+'
+
+That should be all. Check also the SampleApp.
+
 ##License
 This code is licensed under the [Rekisoft Public License][rkspl].  
 See [http://www.rekisoft.eu/licenses/rkspl.html][rkspl] for more informations.
