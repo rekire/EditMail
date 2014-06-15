@@ -1,0 +1,7 @@
+<resources>
+	<string name="email_domain_unknown">Girdiğiniz alan adı mevcut değil. Yazım hatası mı var?</string>
+	<string name="email_no_mx">Girilen alan adı e-posta alamaz.</string>
+	<string name="email_did_you_mean">Şunu mu demek istediniz: %s ?</string>
+	<string name="email_address_incomplete">E-posta adresi tamamlanmadı</string>
+	<string name="email_schema_error">E-posta adresinde yazım hatası var.</string>
+</resources>

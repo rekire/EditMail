@@ -1,0 +1,7 @@
+<resources>
+	<string name="email_domain_unknown">הדומיין שהוזן אינו קיים. שגיאת דפוס?</string>
+	<string name="email_no_mx">הדומיין שהוזן אינו יכול לקבל הודעות דואר אלקטרוני</string>
+	<string name="email_did_you_mean">האם התכוונת ל%s ?</string>
+	<string name="email_address_incomplete">כתובת הדואר האלקטרוני אינה שלמה</string>
+	<string name="email_schema_error">יש שגיאת כתיב בכתובת הדואר האלקטרוני</string>
+</resources>
