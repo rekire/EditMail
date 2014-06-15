@@ -52,7 +52,6 @@ public class EditMail extends EditText {
     private final ArrayList<StatusChangedListener> observers = new ArrayList<EditMail.StatusChangedListener>();
 
     private AddressStatus status = AddressStatus.unknown;
-    private final Helper helper;
 
     /**
      * Simple constructor to use when creating a EditMail from code.
@@ -96,9 +95,9 @@ public class EditMail extends EditText {
 
         setInputType(getInputType() | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
+        Helper helper;
         if(BuildConfig.DEBUG) {
             if(isInEditMode()) {
-                helper = null;
                 return;
             }
         }
@@ -152,7 +151,7 @@ public class EditMail extends EditText {
     /**
      * Removes a StatusChangedListener from this EditMail.
      *
-     * @param listener
+     * @param listener which should be informed on changes.
      * @return <code>true</code> if the listeners were modified by this operation,
      * <code>false</code> otherwise.
      */
@@ -173,10 +172,10 @@ public class EditMail extends EditText {
         private final StatusChangedListener observer;
 
         /**
-         * Creates a new instance of EditMail.java.
+         * Creates a new instance of EditMail.Helper.
          *
-         * @param field
-         * @param listener
+         * @param field The internal EditText which should been used.
+         * @param listener The StatusChangedListener.
          */
         public Helper(EditText field, StatusChangedListener listener) {
             super(field, false, false);
@@ -287,7 +286,7 @@ public class EditMail extends EditText {
                     break;
                 case wrongSchema:
                     if(!address.contains("@") || !address.contains(".")) {
-                        currentError = res.getString(R.string.email_address_incompleat);
+                        currentError = res.getString(R.string.email_address_incomplete);
                     } else {
                         currentError = res.getString(R.string.email_schema_error);
                     }

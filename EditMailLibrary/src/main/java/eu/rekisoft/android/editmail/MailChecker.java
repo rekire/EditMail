@@ -94,6 +94,7 @@ public final class MailChecker {
     /**
      * A small list of well known email addresses.
      */
+    @SuppressWarnings("SpellCheckingInspection")
     private static String[] domains = {"web.de", "gmx.de", "gmx.com", "gmx.net", "freenet.net", "hotmail.com", "gmail.com",
             "googlemail.com", "live.de", "live.com", "hotmail.de", "aol.com", "t-online.de", "hushmail.com", "uni.de", "yahoo.com",
             "yahoo.de"};
@@ -166,6 +167,9 @@ public final class MailChecker {
             }
             return result != null && result.length > 0;
         } catch(TextParseException e) {
+            if(BuildConfig.DEBUG) {
+                Log.w(EditMail.class.getSimpleName(), "Failed parse domain:", e);
+            }
         }
         return false;
     }
@@ -212,8 +216,8 @@ public final class MailChecker {
                     if(result2 != null && result2.length > 0) {
                         // System.out.println("OK! MX: " + mx.getTarget() + " -> " + ((ARecord)result2[0]).getAddress().getHostAddress());
                         return true;
-                    } else {
-                        // System.err.println("Fail: could not resolv " + mx.getTarget());
+                        //} else {
+                        // System.err.println("Fail: could not resolve " + mx.getTarget());
                     }
                 }
             }
@@ -263,14 +267,14 @@ public final class MailChecker {
     }
 
     /**
-     * Helper function for getting the minimal value of a set of ints.
+     * Helper function for getting the minimal value of a set of integers.
      *
-     * @param nums The integer values which should been checked.
+     * @param numbers The integer values which should been checked.
      * @return the minimal value.
      */
-    private static int min(int... nums) {
+    private static int min(int... numbers) {
         int min = Integer.MAX_VALUE;
-        for(int num : nums) {
+        for(int num : numbers) {
             min = min < num ? min : num;
         }
         return min;
