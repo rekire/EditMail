@@ -1,11 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
-    }
-}
 apply plugin: 'android-library'
 apply plugin: 'maven'
 apply plugin: 'signing'
@@ -20,27 +12,18 @@ def mavenGroupId = "eu.rekisoft.android"
 def mavenDescription = "A smart control for entering email addresses with automatically checking if the domain exists and if the domain can receive emails"
 def githubNickname= "rekire"
 def githubProject = "EditMail"
-def author="René Kilczan"
+def author="RenÃ© Kilczan"
 def licenseName="Rekisoft Public License (RKSPL)"
 def licenseUrl="http://www.rekisoft.eu/licenses/rkspl.html"
 def licenseComment="This code is licensed under the Rekisoft Public License."
 def theInceptionYear=2013
 
-configurations {
-    archives {
-        extendsFrom configurations.default
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
+        applicationId "eu.rekisoft.android.editmail"
         minSdkVersion 7
         targetSdkVersion 19
         versionCode 1
@@ -66,13 +49,13 @@ dependencies {
 
 android.libraryVariants.all { variant ->
     def name = variant.buildType.name
-    if (name.equals(com.android.builder.BuilderConstants.DEBUG)) {
+    if (name.equals("debug")) {
         return; // Skip debug builds.
     }
     task("javadoc${variant.name.capitalize()}", type: Javadoc) {
         description "Generates Javadoc for $variant.name."
         source = variant.javaCompile.source
-        ext.androidJar = "${android.plugin.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+        ext.androidJar = System.getenv('ANDROID_HOME') + "/platforms/${android.compileSdkVersion}/android.jar"
         classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
     }
 
