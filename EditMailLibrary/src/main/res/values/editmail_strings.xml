@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+            tools:ignore="AndroidLintUnusedResources">
+    <string name="define_EditMail" translatable="false"/>
+    <string name="library_EditMail_author" translatable="false">René Kilczan</string>
+    <string name="library_EditMail_authorWebsite" translatable="false">http://rene.kilczan.de/</string>
+    <string name="library_EditMail_libraryName" translatable="false">EditMail</string>
+    <string name="library_EditMail_libraryDescription">A smart control for entering email addresses with automatically checking if the domain exists and if the domain can receive emails.</string>
+    <string name="library_EditMail_libraryVersion" translatable="false">1.0.1</string>
+    <string name="library_EditMail_libraryWebsite" translatable="false">https://github.com/rekire/EditMail</string>
+    <string name="library_EditMail_licenseVersion" translatable="false">1.0</string>
+    <string name="library_EditMail_licenseLink" translatable="false">1.0</string>
+    <string name="library_EditMail_licenseContent">Rekisoft Public License
+
+Do with this code what you like under the following conditions:
+
+* Credit me, add a legal notice to your code where every user can see that you use code from me. (This should be with less than 4 clicks)
+* The usage for military (except for humanitarian usage) and explicitly for intelligence is strictly forbidden!
+* If you earn with this code thousands of Dollars or Euro give a donation
+* If you find a bug please tell me</string>
+    <string name="library_EditMail_isOpenSource" translatable="false">true</string>
+    <string name="library_EditMail_repositoryLink" translatable="false">https://github.com/rekire/EditMail</string>
+</resources>
