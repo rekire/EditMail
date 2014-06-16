@@ -2,6 +2,6 @@
     <string name="email_domain_unknown">Il dominio inserito non esiste.</string>
     <string name="email_no_mx">Il dominio inserito non puó ricevere email.</string>
     <string name="email_did_you_mean">Intendi %s?</string>
-    <string name="email_address_incompleat">L\'indirizzo email non è completo.</string>
+    <string name="email_address_incomplete">L\'indirizzo email non è completo.</string>
     <string name="email_schema_error">Nell\'indirizzo email c\'é un\'errore di scrittura</string>
 </resources>

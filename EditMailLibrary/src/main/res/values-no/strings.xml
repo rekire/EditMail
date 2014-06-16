@@ -1,0 +1,7 @@
+<resources>
+	<string name="email_domain_unknown">Det angitte domenet eksisterer ikke. Skrivefeil?</string>
+	<string name="email_no_mx">Det angitte domenet kan ikke motta emailer</string>
+	<string name="email_did_you_mean">Mente du %s?</string>
+	<string name="email_address_incomplete">Mail adressen er ikke komplett</string>
+	<string name="email_schema_error">Mail adressen har en skrivefeil</string>
+</resources>

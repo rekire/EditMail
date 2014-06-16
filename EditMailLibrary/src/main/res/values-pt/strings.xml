@@ -1,0 +1,7 @@
+<resources>
+	<string name="email_domain_unknown">O domínio inserido não existe. Verifique ortografia.</string>
+	<string name="email_no_mx">O domínio inserido não pode receber emails.</string>
+	<string name="email_did_you_mean">Quis dizer %s?</string>
+	<string name="email_address_incomplete">O endereço de email está incompleto.</string>
+	<string name="email_schema_error">O endereço de email contém um erro de ortografia.</string>
+</resources>

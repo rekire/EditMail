@@ -1,0 +1,7 @@
+<resources>
+	<string name="email_domain_unknown">A megadott domain nem létezik. Elírtad?</string>
+	<string name="email_no_mx">A megadott domain nem képes e-mailek fogadására</string>
+	<string name="email_did_you_mean">Úgy értetted %s?</string>
+	<string name="email_address_incomplete">Az e-mail cím hiányos</string>
+	<string name="email_schema_error">Az e-mail cím el lett írva</string>
+</resources>

@@ -1,11 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
-    }
-}
 apply plugin: 'android'
 
 repositories {
@@ -14,7 +6,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.1'
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 7
@@ -33,8 +25,8 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
     //compile project(':EditMailLibrary')
-    compile 'eu.rekisoft.android:editmail:+@aar'
-    compile 'eu.rekisoft.android:uiworker:1.0.+'
-    compile 'eu.rekisoft.android:lazyworker:1.0.+'
-    compile 'dnsjava:dnsjava:+'
+    compile 'eu.rekisoft.android:editmail:1.0.1@aar'
+    compile 'eu.rekisoft.android:uiworker:1.0.1'
+    compile 'eu.rekisoft.android:lazyworker:1.0.0'
+    //compile 'dnsjava:dnsjava:+'
 }

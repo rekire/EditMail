@@ -2,6 +2,6 @@
     <string name="email_domain_unknown">Le domaine n\'existe pas. Typo?</string>
     <string name="email_no_mx">Le domaine saisi ne peut pas recevoir des e-mails</string>
     <string name="email_did_you_mean">Tu veux dire %s?</string>
-    <string name="email_address_incompleat">L\'adresse e-mail est incomplète</string>
+    <string name="email_address_incomplete">L\'adresse e-mail est incomplète</string>
     <string name="email_schema_error">L\'adresse e-mail a une faute de frappe.</string>
 </resources>
