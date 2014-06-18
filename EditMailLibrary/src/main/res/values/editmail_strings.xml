@@ -8,8 +8,8 @@
     <string name="library_EditMail_libraryDescription" tools:ignore="MissingTranslation">A smart control for entering email addresses with automatically checking if the domain exists and if the domain can receive emails.</string>
     <string name="library_EditMail_libraryVersion" translatable="false">1.0.1</string>
     <string name="library_EditMail_libraryWebsite" translatable="false">https://github.com/rekire/EditMail</string>
-    <string name="library_EditMail_licenseVersion" translatable="false">1.0</string>
-    <string name="library_EditMail_licenseLink" translatable="false">1.0</string>
+    <string name="library_EditMail_licenseVersion" translatable="false">Rekisoft Public License</string>
+    <string name="library_EditMail_licenseLink" translatable="false">http://www.rekisoft.eu/licenses/rkspl.html</string>
     <string name="library_EditMail_licenseContent" tools:ignore="MissingTranslation">Rekisoft Public License
 
 Do with this code what you like under the following conditions:
