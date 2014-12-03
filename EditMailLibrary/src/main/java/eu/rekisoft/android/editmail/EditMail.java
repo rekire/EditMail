@@ -9,9 +9,11 @@
  */
 package eu.rekisoft.android.editmail;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.text.Editable;
@@ -19,6 +21,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -29,6 +32,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import eu.rekisoft.android.editmail.MailChecker.AddressStatus;
+import eu.rekisoft.android.tinteddrawable.TintedDrawable;
 import eu.rekisoft.android.util.LazyWorker;
 import eu.rekisoft.android.util.UiWorker;
 
@@ -38,7 +42,7 @@ import eu.rekisoft.android.util.UiWorker;
  * @author René Kilczan
  * @version 1.0
  * @copyright This code is licensed under the Rekisoft Public License.<br/>
- * See http://www.rekisoft.eu/licenses/rkspl.html for more informations.
+ * See http://www.rekisoft.eu/licenses/rkspl.html for more information.
  */
 public class EditMail extends EditText {
     /**
@@ -92,7 +96,16 @@ public class EditMail extends EditText {
      */
     public EditMail(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, android.R.attr.editTextStyle);
+        init(context, attrs, defStyle);
+    }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public EditMail(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context, attrs, defStyleAttr);
+    }
+
+    private void init(Context context, AttributeSet attrs, int defStyle) {
         setInputType(getInputType() | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
         Helper helper;
@@ -122,7 +135,29 @@ public class EditMail extends EditText {
             }
         });
         addTextChangedListener(helper);
+
+        if(Build.VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
+            Drawable background = new TintedDrawable(getResources().getDrawable(R.drawable.abc_edit_text_material)) {
+                @Override
+                protected int getColor(boolean isPressed, boolean isFocused, boolean isActive) {
+                    TypedValue typedValue = new TypedValue();
+                    Resources.Theme theme = getContext().getTheme();
+                    if(hasFocus()) {
+                        if(theme.resolveAttribute(R.attr.colorAccent, typedValue, true)) {
+                            return typedValue.data;
+                        }
+                    }
+                    return getResources().getColor(R.color.bright_foreground_disabled_material_light);
+                }
+            };
+            if(Build.VERSION.SDK_INT > VERSION_CODES.JELLY_BEAN) {
+                setBackground(background);
+            } else {
+                setBackgroundDrawable(background);
+            }
+        }
     }
+
 
     /**
      * @return <code>true</code> if the resolver status is AddressStatus.valid.

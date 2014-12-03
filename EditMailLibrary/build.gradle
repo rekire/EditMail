@@ -1,12 +1,12 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
 
-version = "1.0.1"
+version = "1.1.0"
 group = "eu.rekisoft.android"
 
-def mavenVersion = "1.0.1"
+def mavenVersion = "1.1.0"
 def mavenArtifactId = "editmail"
 def mavenGroupId = "eu.rekisoft.android"
 def mavenDescription = "A smart control for entering email addresses with automatically checking if the domain exists and if the domain can receive emails"
@@ -19,19 +19,18 @@ def licenseComment="This code is licensed under the Rekisoft Public License."
 def theInceptionYear=2013
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "eu.rekisoft.android.editmail"
         minSdkVersion 7
-        targetSdkVersion 19
-        versionCode 2
-        versionName "1.0.1"
+        targetSdkVersion 21
+        versionCode 3
+        versionName version
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -41,6 +40,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['dnsjava-2.1.6.jar'])
     compile 'eu.rekisoft.android:lazyworker:1.0.0'
     compile 'eu.rekisoft.android:uiworker:1.0.1'
+    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile project(':TintedDrawable')
 }
 
 //apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
@@ -49,36 +50,30 @@ dependencies {
 
 android.libraryVariants.all { variant ->
     def name = variant.buildType.name
-    if (name.equals("debug")) {
+    if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
         return; // Skip debug builds.
     }
     task("javadoc${variant.name.capitalize()}", type: Javadoc) {
-        description "Generates Javadoc for $variant.name."
+        description 'Generates Javadoc for $variant.name.'
         source = variant.javaCompile.source
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
-        def sdkDir = properties.getProperty('sdk.dir')
-        ext.androidJar = sdkDir + "/platforms/${android.compileSdkVersion}/android.jar"
+        ext.androidJar = '${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar'
         classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
     }
-
     task("bundleJavadoc${variant.name.capitalize()}", type: Jar) {
-        description "Bundles Javadoc into zip for $variant.name."
-        classifier = "javadoc"
+        description 'Bundles Javadoc into zip for $variant.name'
+        classifier = 'javadoc'
         from tasks["javadoc${variant.name.capitalize()}"]
     }
-
 }
-
 task sourcesJar(type: Jar) {
     classifier = 'sources'
-    from android.sourceSets.main.java
+    from android.sourceSets.main.java.srcDirs
 }
-
 task jar(type: Jar) {
-    from 'build/classes/release'
+    from 'build/intermediates/classes/release'
+    exclude '**/BuildConfig.class'
+    exclude '**/R.class'
 }
-
 task javadocJar(type: Jar, dependsOn: "javadocRelease") {
     classifier = 'javadoc'
     from 'build/docs/javadoc'
@@ -104,7 +99,7 @@ uploadArchives {
     repositories.mavenDeployer {
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-        repository(url: sonatypeRepo) {
+        repository(url: repository) {
             authentication(userName: sonatypeUser, password: sonatypePass)
         }
 
