@@ -1,1 +1,2 @@
-include ':EditMailLibrary', ':SampleApp'
+include ':EditMailLibrary', ':SampleApp', ':TintedDrawable'
+project(':TintedDrawable').projectDir = new File('TintedDrawable/library')

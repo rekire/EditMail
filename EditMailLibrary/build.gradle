@@ -20,7 +20,7 @@ def theInceptionYear=2013
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         minSdkVersion 7
@@ -40,7 +40,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['dnsjava-2.1.6.jar'])
     compile 'eu.rekisoft.android:lazyworker:1.0.0'
     compile 'eu.rekisoft.android:uiworker:1.0.1'
-    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.3'
     compile project(':TintedDrawable')
 }
 
@@ -100,6 +100,10 @@ uploadArchives {
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
         repository(url: repository) {
+            // The error Error: "No such property: sonatypeUser for class: [...]" just means that
+            // you did not setup your local gradle.properties file to store your sonatype
+            // credentials. You can safely comment this DSL out if you don't need to upload this
+            // library to the maven central.
             authentication(userName: sonatypeUser, password: sonatypePass)
         }
 

@@ -1,0 +1,3 @@
+[submodule "TintedDrawable"]
+	path = TintedDrawable
+	url = https://github.com/rekire/TintedDrawable.git
