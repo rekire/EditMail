@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.1.0'
     compile project(':EditMailLibrary')
     //compile 'eu.rekisoft.android:editmail:1.0.1@aar'
     compile 'eu.rekisoft.android:uiworker:1.0.1'

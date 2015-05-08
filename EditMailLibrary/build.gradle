@@ -40,8 +40,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['dnsjava-2.1.6.jar'])
     compile 'eu.rekisoft.android:lazyworker:1.0.0'
     compile 'eu.rekisoft.android:uiworker:1.0.1'
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile project(':TintedDrawable')
+    compile 'com.android.support:appcompat-v7:22.1.0'
 }
 
 //apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
