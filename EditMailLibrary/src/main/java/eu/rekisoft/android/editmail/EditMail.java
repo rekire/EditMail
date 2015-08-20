@@ -92,7 +92,7 @@ public class EditMail extends AppCompatEditText {
      * @see #EditMail(Context, AttributeSet)
      */
     public EditMail(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, android.R.attr.editTextStyle);
+        super(context, attrs, R.attr.editTextStyle);
         init(context, attrs, defStyle);
     }
 
