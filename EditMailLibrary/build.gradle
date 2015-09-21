@@ -20,11 +20,11 @@ def theInceptionYear=2013
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 3
         versionName version
     }
@@ -40,7 +40,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['dnsjava-2.1.6.jar'])
     compile 'eu.rekisoft.android:lazyworker:1.0.0'
     compile 'eu.rekisoft.android:uiworker:1.0.1'
-    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.1'
 }
 
 //apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
@@ -93,7 +93,7 @@ signing {
     sign configurations.archives
 }
 
-uploadArchives {
+/*uploadArchives {
     configuration = configurations.archives
     repositories.mavenDeployer {
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
@@ -145,4 +145,4 @@ uploadArchives {
             }
         }.writeTo("$buildDir/libs/pom.xml")
     }
-}
+}*/

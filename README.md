@@ -6,11 +6,15 @@ EditMail
 You need any IDE which supports the gradle build system. I personally use the [Android Studio][as].
 You also need to install the [JDK (Java Development Kit)][jdk].
 
+This branch is work in progress, it requires still some clean up for the next release. However I use
+this code productive, without any issues.
+
 ##Dependencies
 The dependencies are solved by the gradle build.
 
  - [UiWorker][uiworker] ([RKSPL][rkspl]) is used for UI related updates.
  - [LazyWorker][lazyworker] ([RKSPL][rkspl]) is used for checking the email addresses delayed.
+ - Support library for material design
  - Minimal Android version 2.2
 
 ##Used third party libs
@@ -29,21 +33,21 @@ In case of network trouble nothing no errors will be shown.
 In your gradle file you have to add this dependencies:
 
     compile 'eu.rekisoft.android:editmail:+@aar'
-    compile 'eu.rekisoft.android:uiworker:1.0.+'
-    compile 'eu.rekisoft.android:lazyworker:1.0.+'
-    compile 'dnsjava:dnsjava:+'
+    compile 'eu.rekisoft.android:uiworker:1.0.1'
+    compile 'eu.rekisoft.android:lazyworker:1.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.1'
 
-That should be all. Check also the SampleApp.
+That should be all. Check also the SampleApp in the repository or from the
+[PlayStore](https://play.google.com/store/apps/details?id=eu.rekisoft.android.demo.editmail).
 
 ##License
 This code is licensed under the [Rekisoft Public License][rkspl].  
-See [http://www.rekisoft.eu/licenses/rkspl.html][rkspl] for more informations.
+See [http://www.rekisoft.eu/licenses/rkspl.html][rkspl] for more information.
 
 ##TODO
 
 - Make delays customizable
 - Add example how to use custom domain list
-- Upload and link demo app to the play store
 
 
   [as]: http://developer.android.com/sdk/installing/studio.html
