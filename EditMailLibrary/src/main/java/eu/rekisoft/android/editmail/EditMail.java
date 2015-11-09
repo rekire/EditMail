@@ -12,6 +12,7 @@ package eu.rekisoft.android.editmail;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.support.v7.widget.AppCompatEditText;
@@ -42,17 +43,14 @@ import eu.rekisoft.android.util.UiWorker;
  * See http://www.rekisoft.eu/licenses/rkspl.html for more information.
  */
 public class EditMail extends AppCompatEditText {
-    /**
-     * The delay for beginning a lookup if the email address is fine
-     */
+    /** The delay for beginning a lookup if the email address is fine */
     private static final int SEARCH_DELAY = 300;
-    /**
-     * The delay for showing the results after getting the lookup data. This should prevent messages while typing
-     */
+    /** The delay for showing the results after getting the lookup data. This should prevent messages while typing */
     private static final int SHOW_DELAY = 1200;
-    private final ArrayList<StatusChangedListener> observers = new ArrayList<EditMail.StatusChangedListener>();
+    private final ArrayList<StatusChangedListener> observers = new ArrayList<>();
 
     private AddressStatus status = AddressStatus.unknown;
+    private ErrorHelper helper;
 
     /**
      * Simple constructor to use when creating a EditMail from code.
@@ -99,7 +97,6 @@ public class EditMail extends AppCompatEditText {
     private void init(Context context, AttributeSet attrs, int defStyle) {
         setInputType(getInputType() | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
-        Helper helper;
         if(BuildConfig.DEBUG) {
             if(isInEditMode()) {
                 return;
@@ -116,7 +113,7 @@ public class EditMail extends AppCompatEditText {
 
         a.recycle();
 
-        helper = new Helper(this, new StatusChangedListener() {
+        helper = new ErrorHelper(this, new StatusChangedListener() {
             @Override
             public void statusChanged(AddressStatus status) {
                 EditMail.this.status = status;
@@ -128,6 +125,11 @@ public class EditMail extends AppCompatEditText {
         addTextChangedListener(helper);
     }
 
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        helper.onFocusChanged(focused);
+    }
 
     /**
      * @return <code>true</code> if the resolver status is AddressStatus.valid.
@@ -141,6 +143,10 @@ public class EditMail extends AppCompatEditText {
      */
     public AddressStatus getMailStatus() {
         return status;
+    }
+
+    public void setShowErrorsOnFocusLost(boolean enabled) {
+        helper.setShowErrorsOnFocusLost(enabled);
     }
 
     /**
@@ -165,24 +171,25 @@ public class EditMail extends AppCompatEditText {
     }
 
     /**
-     * A UiWorker implementation which
+     * A UiWorker implementation which manages the error messages and the autocorrection.
      *
      * @author René Kilczan
      */
-    private final static class Helper extends UiWorker<EditText> implements TextWatcher,
+    private final static class ErrorHelper extends UiWorker<EditText> implements TextWatcher,
             OnTouchListener {
         private final EditText mail;
         private String suggestion;
         private String currentError;
         private final StatusChangedListener observer;
+        private boolean showErrorsOnFocusLost = true;
 
         /**
-         * Creates a new instance of EditMail.Helper.
+         * Creates a new instance of ErrorHelper.
          *
          * @param field The internal EditText which should been used.
          * @param listener The StatusChangedListener.
          */
-        public Helper(EditText field, StatusChangedListener listener) {
+        public ErrorHelper(EditText field, StatusChangedListener listener) {
             super(field, false, false);
             mail = field;
             observer = listener;
@@ -306,9 +313,20 @@ public class EditMail extends AppCompatEditText {
             observer.statusChanged(result);
 
             // inform the user a little later about errors
-            LazyWorker.getSharedInstance().doLater(this, SHOW_DELAY);
+            if(!showErrorsOnFocusLost) {
+                LazyWorker.getSharedInstance().doLater(this, SHOW_DELAY);
+            }
         }
 
+        void onFocusChanged(boolean focused) {
+            if(!focused && showErrorsOnFocusLost) {
+                run();
+            }
+        }
+
+        public void setShowErrorsOnFocusLost(boolean enabled) {
+            showErrorsOnFocusLost = enabled;
+        }
     }
 
     /**
