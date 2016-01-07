@@ -1,6 +1,6 @@
 /**
  * @copyright
- * This code is licensed under the Rekisoft Public License.
+ * This code is licensed under the Rekisoft Public License.<br/>
  * See http://www.rekisoft.eu/licenses/rkspl.html for more informations.
  */
 /**
