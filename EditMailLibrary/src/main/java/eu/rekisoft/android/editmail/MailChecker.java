@@ -1,7 +1,7 @@
 /**
  * @copyright
  * This code is licensed under the Rekisoft Public License.<br/>
- * See http://www.rekisoft.eu/licenses/rkspl.html for more informations.
+ * See http://www.rekisoft.eu/licenses/rkspl.html for more information.
  */
 package eu.rekisoft.android.editmail;
 
@@ -25,7 +25,7 @@ import java.util.Arrays;
  * @author René Kilczan
  * @version 1.0
  * @copyright This code is licensed under the Rekisoft Public License.<br/>
- * See http://www.rekisoft.eu/licenses/rkspl.html for more informations.
+ * See http://www.rekisoft.eu/licenses/rkspl.html for more information.
  */
 public final class MailChecker {
     /**

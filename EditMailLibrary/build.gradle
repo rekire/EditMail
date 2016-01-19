@@ -3,10 +3,10 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 
-version = "1.1.0"
+version = "2.0.0"
 group = "eu.rekisoft.android"
 
-def mavenVersion = "1.1.0"
+def mavenVersion = "2.0.0"
 def mavenArtifactId = "editmail"
 def mavenGroupId = "eu.rekisoft.android"
 def mavenDescription = "A smart control for entering email addresses with automatically checking if the domain exists and if the domain can receive emails"
@@ -25,7 +25,7 @@ android {
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 3
+        versionCode 4
         versionName version
     }
     buildTypes {
@@ -70,8 +70,8 @@ task sourcesJar(type: Jar) {
 }
 task jar(type: Jar) {
     from 'build/intermediates/classes/release'
-    exclude '**/BuildConfig.class'
-    exclude '**/R.class'
+    //exclude '**/BuildConfig.class'
+    //exclude '**/R.class'
 }
 task javadocJar(type: Jar, dependsOn: "javadocRelease") {
     classifier = 'javadoc'
@@ -86,24 +86,24 @@ artifacts {
 
 task wrapper(type: Wrapper) {
     description "Generates the gradle wrapper"
-    gradleVersion = "1.10"
+    gradleVersion = "2.10"
 }
 
 signing {
     sign configurations.archives
 }
 
-/*uploadArchives {
+uploadArchives {
     configuration = configurations.archives
     repositories.mavenDeployer {
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
         repository(url: repository) {
-            // The error Error: "No such property: sonatypeUser for class: [...]" just means that
-            // you did not setup your local gradle.properties file to store your sonatype
-            // credentials. You can safely comment this DSL out if you don't need to upload this
-            // library to the maven central.
-            authentication(userName: sonatypeUser, password: sonatypePass)
+            if(project.hasProperty('sonatypeUser') && project.hasProperty('sonatypePass')) {
+                authentication(userName: sonatypeUser, password: sonatypePass)
+            } else {
+                logger.warn('Found not sonatype credentials. Publishing is not possible.')
+            }
         }
 
         pom.project {
@@ -145,4 +145,4 @@ signing {
             }
         }.writeTo("$buildDir/libs/pom.xml")
     }
-}*/
+}
