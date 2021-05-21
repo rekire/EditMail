@@ -35,7 +35,7 @@ In your gradle file you have to add this dependencies:
 
 That should be all. Check also the SampleApp.
 
-##L icense
+## License
 This code is licensed under the [Rekisoft Public License][rkspl].  
 See [http://www.rekisoft.eu/licenses/rkspl.html][rkspl] for more information.
 
