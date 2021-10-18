@@ -1,12 +1,12 @@
 apply plugin: 'android-library'
-apply plugin: 'maven'
+//apply plugin: 'maven'
 apply plugin: 'signing'
 
 
-version = "1.0.1"
+version = "2.0.0"
 group = "eu.rekisoft.android"
 
-def mavenVersion = "1.0.1"
+def mavenVersion = "2.0.0"
 def mavenArtifactId = "editmail"
 def mavenGroupId = "eu.rekisoft.android"
 def mavenDescription = "A smart control for entering email addresses with automatically checking if the domain exists and if the domain can receive emails"
@@ -19,13 +19,13 @@ def licenseComment="This code is licensed under the Rekisoft Public License."
 def theInceptionYear=2013
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 31
+    //buildToolsVersion "19.1.0"
 
     defaultConfig {
         applicationId "eu.rekisoft.android.editmail"
         minSdkVersion 7
-        targetSdkVersion 19
+        targetSdkVersion 31
         versionCode 2
         versionName "1.0.1"
     }
@@ -38,15 +38,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['dnsjava-2.1.6.jar'])
-    compile 'eu.rekisoft.android:lazyworker:1.0.0'
-    compile 'eu.rekisoft.android:uiworker:1.0.1'
+    implementation 'eu.rekisoft.android:lazyworker:2.0.2'
+    implementation 'org.minidns:minidns-hla:1.0.1'
 }
 
 //apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
 
 // copy of https://github.com/keyboardsurfer/Crouton/blob/master/library/build.gradle
-
+/*
 android.libraryVariants.all { variant ->
     def name = variant.buildType.name
     if (name.equals("debug")) {
@@ -68,7 +67,7 @@ android.libraryVariants.all { variant ->
         from tasks["javadoc${variant.name.capitalize()}"]
     }
 
-}
+}*/
 
 task sourcesJar(type: Jar) {
     classifier = 'sources'
@@ -98,11 +97,11 @@ task wrapper(type: Wrapper) {
 signing {
     sign configurations.archives
 }
-
+/*
 uploadArchives {
     configuration = configurations.archives
     repositories.mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+//        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
         repository(url: sonatypeRepo) {
             authentication(userName: sonatypeUser, password: sonatypePass)
@@ -148,3 +147,4 @@ uploadArchives {
         }.writeTo("$buildDir/libs/pom.xml")
     }
 }
+*/
