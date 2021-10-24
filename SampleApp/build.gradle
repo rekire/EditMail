@@ -8,7 +8,7 @@ repositories {
 
 android {
     compileSdkVersion 31
-    buildToolsVersion '19.1.0'
+    //buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 7
@@ -18,7 +18,7 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            //runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -26,7 +26,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
 
-        coreLibraryDesugaringEnabled true
+        //coreLibraryDesugaringEnabled true
     }
     packagingOptions {
         exclude '.readme'
@@ -53,5 +53,5 @@ android {
 dependencies {
     implementation "androidx.appcompat:appcompat:1.3.1"
     //compile 'eu.rekisoft.android:editmail:1.0.1@aar'
-    implementation 'eu.rekisoft.android:lazyworker:2.0.2'
+    //implementation 'eu.rekisoft.android:lazyworker:2.0.2'
 }

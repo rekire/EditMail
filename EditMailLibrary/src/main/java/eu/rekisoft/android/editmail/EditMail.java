@@ -29,8 +29,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import eu.rekisoft.android.editmail.MailChecker.AddressStatus;
-import eu.rekisoft.android.util.LazyWorker;
-import eu.rekisoft.android.util.UiWorker;
 
 /**
  * EditText for email addresses.
@@ -95,7 +93,7 @@ public class EditMail extends EditText {
 
         setInputType(getInputType() | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
-        Helper helper;
+        //Helper helper;
         if(BuildConfig.DEBUG) {
             if(isInEditMode()) {
                 return;
@@ -112,16 +110,16 @@ public class EditMail extends EditText {
 
         a.recycle();
 
-        helper = new Helper(this, new StatusChangedListener() {
-            @Override
-            public void statusChanged(AddressStatus status) {
-                EditMail.this.status = status;
-                for(StatusChangedListener l : observers) {
-                    l.statusChanged(status);
-                }
-            }
-        });
-        addTextChangedListener(helper);
+        //helper = new Helper(this, new StatusChangedListener() {
+        //    @Override
+        //    public void statusChanged(AddressStatus status) {
+        //        EditMail.this.status = status;
+        //        for(StatusChangedListener l : observers) {
+        //            l.statusChanged(status);
+        //        }
+        //    }
+        //});
+        //addTextChangedListener(helper);
     }
 
     /**
@@ -164,147 +162,147 @@ public class EditMail extends EditText {
      *
      * @author René Kilczan
      */
-    private final static class Helper extends UiWorker<EditText> implements TextWatcher,
-            OnTouchListener {
-        private final EditText mail;
-        private String suggestion;
-        private String currentError;
-        private final StatusChangedListener observer;
+    //private final static class Helper extends UiWorker<EditText> implements TextWatcher,
+    //        OnTouchListener {
+    //    private final EditText mail;
+    //    private String suggestion;
+    //    private String currentError;
+    //    private final StatusChangedListener observer;
 
-        /**
-         * Creates a new instance of EditMail.Helper.
-         *
-         * @param field The internal EditText which should been used.
-         * @param listener The StatusChangedListener.
-         */
-        public Helper(EditText field, StatusChangedListener listener) {
-            super(field, false, false);
-            mail = field;
-            observer = listener;
-        }
+    //    /**
+    //     * Creates a new instance of EditMail.Helper.
+    //     *
+    //     * @param field The internal EditText which should been used.
+    //     * @param listener The StatusChangedListener.
+    //     */
+    //    public Helper(EditText field, StatusChangedListener listener) {
+    //        super(field, false, false);
+    //        mail = field;
+    //        observer = listener;
+    //    }
 
-        /**
-         * The email validation which is executed delayed.
-         */
-        private final Runnable doCheck = new Runnable() {
-            @Override
-            public void run() {
-                Editable txt = mail.getText();
-                if(TextUtils.isEmpty(txt)) {
-                    observer.statusChanged(AddressStatus.unknown);
-                    return;
-                }
-                final String mail = txt.toString().trim();
-                boolean okay = !TextUtils.isEmpty(mail) && TextUtils.isGraphic(mail);
-                if(okay) {
-                    checkMailAddress(mail);
-                }
-            }
-        };
+    //    /**
+    //     * The email validation which is executed delayed.
+    //     */
+    //    private final Runnable doCheck = new Runnable() {
+    //        @Override
+    //        public void run() {
+    //            Editable txt = mail.getText();
+    //            if(TextUtils.isEmpty(txt)) {
+    //                observer.statusChanged(AddressStatus.unknown);
+    //                return;
+    //            }
+    //            final String mail = txt.toString().trim();
+    //            boolean okay = !TextUtils.isEmpty(mail) && TextUtils.isGraphic(mail);
+    //            if(okay) {
+    //                checkMailAddress(mail);
+    //            }
+    //        }
+    //    };
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            // remove all error states on text changes.
-            mail.setError(null);
-        }
+    //    @Override
+    //    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    //        // remove all error states on text changes.
+    //        mail.setError(null);
+    //    }
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
+    //    @Override
+    //    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    //    }
 
-        @Override
-        public void afterTextChanged(Editable s) {
-            // When the change is done set the internal status to pending and invoke doCheck delayed.
-            observer.statusChanged(AddressStatus.pending);
-            LazyWorker.getSharedInstance().doLater(doCheck, SEARCH_DELAY);
-        }
+    //    @Override
+    //    public void afterTextChanged(Editable s) {
+    //        // When the change is done set the internal status to pending and invoke doCheck delayed.
+    //        observer.statusChanged(AddressStatus.pending);
+    //        LazyWorker.getSharedInstance().doLater(doCheck, SEARCH_DELAY);
+    //    }
 
-        // this listener is invoked by the popup "Did you mean xyz@example.com?".
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            v.setOnTouchListener(null);
-            if(suggestion != null) {
-                mail.setText(suggestion);
-                mail.setSelection(suggestion.length());
-                mail.setError(null);
-                suggestion = null;
-                observer.statusChanged(AddressStatus.valid);
-                // mPositiveButton.setEnabled(true);
-            }
-            return false;
-        }
+    //    // this listener is invoked by the popup "Did you mean xyz@example.com?".
+    //    @Override
+    //    public boolean onTouch(View v, MotionEvent event) {
+    //        v.setOnTouchListener(null);
+    //        if(suggestion != null) {
+    //            mail.setText(suggestion);
+    //            mail.setSelection(suggestion.length());
+    //            mail.setError(null);
+    //            suggestion = null;
+    //            observer.statusChanged(AddressStatus.valid);
+    //            // mPositiveButton.setEnabled(true);
+    //        }
+    //        return false;
+    //    }
 
-        // Sets the error popup on the UI thread, together with a onclick observer to the popup.
-        // Well a little hackish made but it works :-)
-        @Override
-        protected void doWork(EditText mail) {
-            mail.setError(currentError);
-            try {
-                Field mErrorPopup;
-                Object popupHolder;
-                if(Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
-                    Field mEditor = TextView.class.getDeclaredField("mEditor");
-                    mEditor.setAccessible(true);
-                    popupHolder = mEditor.get(mail);
-                    mErrorPopup = popupHolder.getClass().getDeclaredField("mErrorPopup");
-                } else {
-                    popupHolder = mail;
-                    mErrorPopup = TextView.class.getDeclaredField("mPopup");
-                }
-                mErrorPopup.setAccessible(true);
-                Object errorPopup = mErrorPopup.get(popupHolder);
-                if(errorPopup != null) {
-                    Field mView = errorPopup.getClass().getDeclaredField("mView");
-                    mView.setAccessible(true);
-                    TextView view = (TextView) mView.get(errorPopup);
-                    view.setOnTouchListener(this);
-                }
-            } catch(Exception e) {
-                Log.e(getClass().getSimpleName(), "Error while hacking: ", e);
-            }
-        }
+    //    // Sets the error popup on the UI thread, together with a onclick observer to the popup.
+    //    // Well a little hackish made but it works :-)
+    //    @Override
+    //    protected void doWork(EditText mail) {
+    //        mail.setError(currentError);
+    //        try {
+    //            Field mErrorPopup;
+    //            Object popupHolder;
+    //            if(Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
+    //                Field mEditor = TextView.class.getDeclaredField("mEditor");
+    //                mEditor.setAccessible(true);
+    //                popupHolder = mEditor.get(mail);
+    //                mErrorPopup = popupHolder.getClass().getDeclaredField("mErrorPopup");
+    //            } else {
+    //                popupHolder = mail;
+    //                mErrorPopup = TextView.class.getDeclaredField("mPopup");
+    //            }
+    //            mErrorPopup.setAccessible(true);
+    //            Object errorPopup = mErrorPopup.get(popupHolder);
+    //            if(errorPopup != null) {
+    //                Field mView = errorPopup.getClass().getDeclaredField("mView");
+    //                mView.setAccessible(true);
+    //                TextView view = (TextView) mView.get(errorPopup);
+    //                view.setOnTouchListener(this);
+    //            }
+    //        } catch(Exception e) {
+    //            Log.e(getClass().getSimpleName(), "Error while hacking: ", e);
+    //        }
+    //    }
 
-        /**
-         * The check if the email address is valid. The result is set to currentError.
-         *
-         * @param address The email address to check.
-         */
-        private void checkMailAddress(String address) {
-            AddressStatus result = MailChecker.validate(address);
-            Resources res = mail.getResources();
-            suggestion = null;
-            switch(result) {
-                case noMxRecord:
-                    currentError = res.getString(R.string.email_no_mx);
-                    break;
-                case notRegistered:
-                    currentError = res.getString(R.string.email_domain_unknown);
-                    break;
-                case typoDetected:
-                    currentError = res.getString(R.string.email_did_you_mean, result.getMailAddress());
-                    suggestion = result.getMailAddress();
-                    break;
-                case wrongSchema:
-                    if(!address.contains("@") || !address.contains(".")) {
-                        currentError = res.getString(R.string.email_address_incomplete);
-                    } else {
-                        currentError = res.getString(R.string.email_schema_error);
-                    }
-                    break;
-                case unknown:
-                case valid:
-                default:
-                    currentError = null;
-                    break;
-            }
+    //    /**
+    //     * The check if the email address is valid. The result is set to currentError.
+    //     *
+    //     * @param address The email address to check.
+    //     */
+    //    private void checkMailAddress(String address) {
+    //        AddressStatus result = MailChecker.validate(address);
+    //        Resources res = mail.getResources();
+    //        suggestion = null;
+    //        switch(result) {
+    //            case noMxRecord:
+    //                currentError = res.getString(R.string.email_no_mx);
+    //                break;
+    //            case notRegistered:
+    //                currentError = res.getString(R.string.email_domain_unknown);
+    //                break;
+    //            case typoDetected:
+    //                currentError = res.getString(R.string.email_did_you_mean, result.getMailAddress());
+    //                suggestion = result.getMailAddress();
+    //                break;
+    //            case wrongSchema:
+    //                if(!address.contains("@") || !address.contains(".")) {
+    //                    currentError = res.getString(R.string.email_address_incomplete);
+    //                } else {
+    //                    currentError = res.getString(R.string.email_schema_error);
+    //                }
+    //                break;
+    //            case unknown:
+    //            case valid:
+    //            default:
+    //                currentError = null;
+    //                break;
+    //        }
 
-            observer.statusChanged(result);
+    //        observer.statusChanged(result);
 
-            // inform the user a little later about errors
-            LazyWorker.getSharedInstance().doLater(this, SHOW_DELAY);
-        }
+    //        // inform the user a little later about errors
+    //        LazyWorker.getSharedInstance().doLater(this, SHOW_DELAY);
+    //    }
 
-    }
+    //}
 
     /**
      * A listener for observing email validation changes.

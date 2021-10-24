@@ -1,4 +1,5 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 //apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -23,7 +24,6 @@ android {
     //buildToolsVersion "19.1.0"
 
     defaultConfig {
-        applicationId "eu.rekisoft.android.editmail"
         minSdkVersion 7
         targetSdkVersion 31
         versionCode 2
@@ -31,15 +31,21 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            //runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+    sourceSets {
+        getByName("main").java.srcDirs("src/main/kotlin")
+        getByName("test").java.srcDirs("src/test/kotlin")
+        getByName("androidTest").java.srcDirs("src/androidTest/kotlin")
     }
 }
 
 dependencies {
-    implementation 'eu.rekisoft.android:lazyworker:2.0.2'
+    //implementation 'eu.rekisoft.android:lazyworker:2.0.2'
     implementation 'org.minidns:minidns-hla:1.0.1'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 //apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
@@ -94,9 +100,9 @@ task wrapper(type: Wrapper) {
     gradleVersion = "1.10"
 }
 
-signing {
-    sign configurations.archives
-}
+//signing {
+//    sign configurations.archives
+//}
 /*
 uploadArchives {
     configuration = configurations.archives

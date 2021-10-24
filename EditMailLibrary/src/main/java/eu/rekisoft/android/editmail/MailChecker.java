@@ -10,12 +10,6 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.util.Log;
 
-import org.xbill.DNS.Lookup;
-import org.xbill.DNS.MXRecord;
-import org.xbill.DNS.Record;
-import org.xbill.DNS.TextParseException;
-import org.xbill.DNS.Type;
-
 import java.net.IDN;
 import java.util.Arrays;
 
@@ -101,7 +95,7 @@ public final class MailChecker {
 
     static {
         // Set the network timeout to one second.
-        Lookup.getDefaultResolver().setTimeout(1);
+        //Lookup.getDefaultResolver().setTimeout(1);
     }
 
     /**
@@ -159,18 +153,18 @@ public final class MailChecker {
      * @throws IllegalStateException on network errors.
      */
     private static boolean doesDomainExists(String domain) throws IllegalStateException {
-        try {
-            Lookup l = new Lookup(domain, Type.NS);
-            Record[] result = l.run();
-            if(l.getResult() == Lookup.TRY_AGAIN) {
-                throw new IllegalStateException();
-            }
-            return result != null && result.length > 0;
-        } catch(TextParseException e) {
-            if(BuildConfig.DEBUG) {
-                Log.w(EditMail.class.getSimpleName(), "Failed parse domain:", e);
-            }
-        }
+        //try {
+        //    Lookup l = new Lookup(domain, Type.NS);
+        //    Record[] result = l.run();
+        //    if(l.getResult() == Lookup.TRY_AGAIN) {
+        //        throw new IllegalStateException();
+        //    }
+        //    return result != null && result.length > 0;
+        //} catch(TextParseException e) {
+        //    if(BuildConfig.DEBUG) {
+        //        Log.w(EditMail.class.getSimpleName(), "Failed parse domain:", e);
+        //    }
+        //}
         return false;
     }
 
@@ -203,27 +197,27 @@ public final class MailChecker {
      * @throws IllegalStateException on network errors.
      */
     private static boolean validateMxServer(String domain) throws IllegalStateException {
-        try {
-            Lookup l = new Lookup(domain, Type.MX);
-            Record[] result = l.run();
-            if(l.getResult() == Lookup.TRY_AGAIN) {
-                throw new IllegalStateException();
-            }
-            if(result != null && result.length > 0) {
-                for(Record r : result) {
-                    MXRecord mx = (MXRecord) r;
-                    Record[] result2 = new Lookup(mx.getTarget(), Type.A).run();
-                    if(result2 != null && result2.length > 0) {
-                        // System.out.println("OK! MX: " + mx.getTarget() + " -> " + ((ARecord)result2[0]).getAddress().getHostAddress());
-                        return true;
-                        //} else {
-                        // System.err.println("Fail: could not resolve " + mx.getTarget());
-                    }
-                }
-            }
-        } catch(TextParseException e) {
-            e.printStackTrace();
-        }
+        //try {
+        //    Lookup l = new Lookup(domain, Type.MX);
+        //    Record[] result = l.run();
+        //    if(l.getResult() == Lookup.TRY_AGAIN) {
+        //        throw new IllegalStateException();
+        //    }
+        //    if(result != null && result.length > 0) {
+        //        for(Record r : result) {
+        //            MXRecord mx = (MXRecord) r;
+        //            Record[] result2 = new Lookup(mx.getTarget(), Type.A).run();
+        //            if(result2 != null && result2.length > 0) {
+        //                // System.out.println("OK! MX: " + mx.getTarget() + " -> " + ((ARecord)result2[0]).getAddress().getHostAddress());
+        //                return true;
+        //                //} else {
+        //                // System.err.println("Fail: could not resolve " + mx.getTarget());
+        //            }
+        //        }
+        //    }
+        //} catch(TextParseException e) {
+        //    e.printStackTrace();
+        //}
         // System.err.println("Fail: not mx record for " + domain + " found");
         return false;
     }
