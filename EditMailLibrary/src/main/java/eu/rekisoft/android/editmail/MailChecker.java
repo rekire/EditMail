@@ -22,68 +22,6 @@ import java.util.Arrays;
  * See http://www.rekisoft.eu/licenses/rkspl.html for more informations.
  */
 public final class MailChecker {
-    /**
-     * The status of the mail address verification.
-     *
-     * @author René Kilczan
-     */
-    public static enum AddressStatus {
-        /**
-         * The address seems to be fine
-         */
-        valid,
-        /**
-         * The address has some schema errors like a missing at sign
-         */
-        wrongSchema,
-        /**
-         * The domain is currently not registered
-         */
-        notRegistered,
-        /**
-         * The domain has no MX record (so the domain cannot receive mails)
-         */
-        noMxRecord,
-        /**
-         * A typographic error was detected
-         */
-        typoDetected,
-        /**
-         * The status of the address is unknown
-         */
-        unknown,
-        /**
-         * The mail address check is pending
-         */
-        pending;
-
-        private String mail;
-
-        /**
-         * @return the suggested mail address.
-         */
-        public String getMailAddress() {
-            return mail;
-        }
-
-        /**
-         * Set the email address in case of a detected typo.
-         *
-         * @param mail The mail address which is guessed.
-         * @return this.
-         */
-        protected AddressStatus setMailAddress(String mail) {
-            this.mail = mail;
-            return this;
-        }
-
-        /**
-         * @return <code>true</code> if the email address is not valid or a typo was detected.
-         */
-        public boolean wrong() {
-            return this != valid && this != typoDetected;
-        }
-    }
 
     /**
      * A small list of well known email addresses.
@@ -115,7 +53,7 @@ public final class MailChecker {
      * @param mail the input mail address.
      * @return the status of the validation with a copy of the mail address on success.
      */
-    public static MailChecker.AddressStatus validate(String mail) {
+    public static AddressStatus validate(String mail) {
         String domain = getDomain(mail);
         if(domain == null) {
             // System.err.println(mail + " is no valid email address");

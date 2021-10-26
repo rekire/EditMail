@@ -18,7 +18,7 @@ class DnsTest {
         unknown
     }
 
-        @Test
+    @Test
     fun evaluating() {
         val cases = mapOf(
             "github.com" to AddressStatus.valid,
@@ -29,6 +29,11 @@ class DnsTest {
             val result = checkDomain(domain)
             assertEquals("Unexpected result for $domain", expected, result)
         }
+    }
+
+    @Test
+    fun doh() {
+        println(DohResolver().query(Question("github.xxx", Record.TYPE.MX)))
     }
 
     private fun checkDomain(domain: String) : AddressStatus {

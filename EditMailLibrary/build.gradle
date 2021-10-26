@@ -24,7 +24,7 @@ android {
     //buildToolsVersion "19.1.0"
 
     defaultConfig {
-        minSdkVersion 7
+        minSdkVersion 14//7
         targetSdkVersion 31
         versionCode 2
         versionName "1.0.1"
@@ -43,8 +43,12 @@ android {
 }
 
 dependencies {
-    //implementation 'eu.rekisoft.android:lazyworker:2.0.2'
+    implementation 'eu.rekisoft.android.util:LazyWorker:2.0.2'
     implementation 'org.minidns:minidns-hla:1.0.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-runtime:2.3.1"
     testImplementation 'junit:junit:4.13.2'
 }
 
