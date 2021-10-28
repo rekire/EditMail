@@ -10,22 +10,11 @@
 package eu.rekisoft.android.editmail;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import eu.rekisoft.android.editmail.AddressStatus;

@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-    implementation 'eu.rekisoft.android.util:LazyWorker:2.0.2'
+    implementation 'eu.rekisoft.android.util:LazyWorker:2.0.3'
     implementation 'org.minidns:minidns-hla:1.0.1'
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'com.google.android.material:material:1.4.0'

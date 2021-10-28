@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import com.google.android.material.textfield.TextInputLayout
 import eu.rekisoft.android.util.LazyWorker
@@ -16,7 +17,7 @@ import java.util.*
 
 typealias Resolver = (String) -> MxValidator.ResolverResult
 
-class MxValidator private constructor(builder: Builder): TextWatcher {
+open class MxValidator private constructor(builder: Builder): TextWatcher {
     data class ResolverResult(val resultCount: Int, val notFound: Boolean)
 
     private var resolv: Resolver = builder.resolver
@@ -45,7 +46,7 @@ class MxValidator private constructor(builder: Builder): TextWatcher {
                         } ?: updateStatus(AddressStatus.unknown)
                 }
             }
-        }
+        } ?: updateStatus(AddressStatus.wrongSchema)
     }
 
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -66,7 +67,8 @@ class MxValidator private constructor(builder: Builder): TextWatcher {
         }
     }
 
-    private fun updateStatus(status: AddressStatus, mail: String? = null) {
+    @VisibleForTesting
+    internal fun updateStatus(status: AddressStatus, mail: String? = null) {
         //(this.status as MutableLiveData).postValue(status)
         setError(when(status) {
             AddressStatus.pending,

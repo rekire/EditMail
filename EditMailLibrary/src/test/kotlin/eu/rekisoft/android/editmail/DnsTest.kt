@@ -1,8 +1,10 @@
 package eu.rekisoft.android.editmail
 
 import android.content.Context
+import android.os.Handler
 import android.text.Editable
 import androidx.lifecycle.Lifecycle
+import eu.rekisoft.android.util.ThreadingHelper
 import org.junit.Assert.*
 import org.junit.Test
 import org.minidns.dnsmessage.DnsMessage.RESPONSE_CODE
@@ -11,13 +13,14 @@ import org.minidns.dnssec.DnssecValidationFailedException
 import org.minidns.hla.DnssecResolverApi
 import org.minidns.record.MX
 import org.minidns.record.Record
-import org.mockito.Mockito
 import java.io.IOException
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
+
+import org.mockito.ArgumentCaptor
+
+import org.mockito.Mockito.*
 
 class DnsTest {
-    enum class AddressStatus {
+    enum class AddressStatus2 {
         valid,
         notRegistered,
         noMxRecord,
@@ -27,9 +30,9 @@ class DnsTest {
     @Test
     fun evaluating() {
         val cases = mapOf(
-            "github.com" to AddressStatus.valid,
-            "github.io" to AddressStatus.noMxRecord,
-            "github.xxx" to AddressStatus.notRegistered,
+            "github.com" to AddressStatus2.valid,
+            "github.io" to AddressStatus2.noMxRecord,
+            "github.xxx" to AddressStatus2.notRegistered,
         )
         cases.forEach { (domain, expected) ->
             val result = checkDomain(domain)
@@ -42,24 +45,36 @@ class DnsTest {
         println(DohResolver().query(Question("github.xxx", Record.TYPE.MX)))
     }
 
+    fun <T> capture(argumentCaptor: ArgumentCaptor<T>): T = argumentCaptor.capture()
+    fun <T> ArgumentCaptor<T>.captureNonNull(): T = requireNotNull(capture())
+
     @Test
     fun mxValidatorTest() {
-        val latch = CountDownLatch(1)
-        var success = false
-        val domain = Mockito.mock(Editable::class.java)
-        Mockito.`when`(domain.toString()).thenReturn("gmail.com")
-        MxValidator.Builder().apply {
-            context = Mockito.mock(Context::class.java)
-            lifecycle = Mockito.mock(Lifecycle::class.java)
+        val domain = mock(Editable::class.java)
+        `when`(domain.toString()).thenReturn("example@gmail.com")
+        val mockHandler = mock(Handler::class.java)
+        `when`(mockHandler.postDelayed(any(), anyLong())).thenAnswer { invocation ->
+            println("TEST")
+            val runnable = invocation.arguments[0] as Runnable
+            runnable.run()
+            true
+        }
+        ThreadingHelper.mockHandler = mockHandler
+        ThreadingHelper.mockIsOnMainThread = true
+        val validator = spy(MxValidator.Builder().apply {
+            context = mock(Context::class.java)
+            lifecycle = mock(Lifecycle::class.java)
             resolver = { domain ->
                 println("got request for $domain")
-                success = true
-                latch.countDown()
                 MxValidator.ResolverResult(1, false)
             }
-        }.build().afterTextChanged(domain)
-        latch.await(3, TimeUnit.SECONDS)
-        assert(success)
+        }.build())
+        validator.afterTextChanged(domain)
+        val statusArg : ArgumentCaptor<AddressStatus> = ArgumentCaptor.forClass(AddressStatus::class.java)
+        val mailArg : ArgumentCaptor<String> = ArgumentCaptor.forClass(String::class.java)
+        //verify(validator).updateStatus(statusArg.captureNonNull(), mailArg.capture())
+        verify(validator).updateStatus(statusArg.capture(), mailArg.capture())
+        assertEquals(AddressStatus.valid, statusArg.value)
     }
 
     @Test
@@ -91,7 +106,7 @@ class DnsTest {
             "aol.con" to "aol.com",
             "example.com" to null,
             "coox.net" to "cox.net",
-            "ain.con" to "null",
+            "ain.con" to null,
         )
 
         testCases.forEach { (input, expected) ->
@@ -99,21 +114,21 @@ class DnsTest {
         }
     }
 
-    private fun checkDomain(domain: String) : AddressStatus {
+    private fun checkDomain(domain: String) : AddressStatus2 {
         return try {
             val result = DnssecResolverApi.INSTANCE.resolve<MX>(Question(domain, Record.TYPE.MX))
             when {
-                result.wasSuccessful() && result.answersOrEmptySet.isEmpty() -> AddressStatus.noMxRecord
-                result.wasSuccessful() && result.answersOrEmptySet.isNotEmpty() -> AddressStatus.valid
-                result.responseCode == RESPONSE_CODE.NX_DOMAIN -> AddressStatus.notRegistered
-                else -> AddressStatus.unknown
+                result.wasSuccessful() && result.answersOrEmptySet.isEmpty() -> AddressStatus2.noMxRecord
+                result.wasSuccessful() && result.answersOrEmptySet.isNotEmpty() -> AddressStatus2.valid
+                result.responseCode == RESPONSE_CODE.NX_DOMAIN -> AddressStatus2.notRegistered
+                else -> AddressStatus2.unknown
             }
         } catch (err: DnssecValidationFailedException) {
             println("Error: ${err.message}")
             err.printStackTrace()
-            AddressStatus.unknown
+            AddressStatus2.unknown
         } catch (t: IOException) {
-            AddressStatus.unknown
+            AddressStatus2.unknown
         }
     }
 }
