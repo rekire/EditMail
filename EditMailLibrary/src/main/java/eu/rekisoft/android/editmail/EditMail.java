@@ -28,7 +28,7 @@ import android.widget.TextView;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import eu.rekisoft.android.editmail.MailChecker.AddressStatus;
+import eu.rekisoft.android.editmail.AddressStatus;
 
 /**
  * EditText for email addresses.
