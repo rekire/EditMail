@@ -18,6 +18,7 @@ import java.io.IOException
 import org.mockito.ArgumentCaptor
 
 import org.mockito.Mockito.*
+import org.mockito.kotlin.argumentCaptor
 
 class DnsTest {
     enum class AddressStatus2 {
@@ -70,12 +71,36 @@ class DnsTest {
             }
         }.build())
         validator.afterTextChanged(domain)
-        val statusArg : ArgumentCaptor<AddressStatus> = ArgumentCaptor.forClass(AddressStatus::class.java)
-        val mailArg : ArgumentCaptor<String> = ArgumentCaptor.forClass(String::class.java)
+        //val statusArg : ArgumentCaptor<AddressStatus> = ArgumentCaptor.forClass(AddressStatus::class.java)
+        //val mailArg : ArgumentCaptor<String> = ArgumentCaptor.forClass(String::class.java)
         //verify(validator).updateStatus(statusArg.captureNonNull(), mailArg.capture())
-        verify(validator).updateStatus(statusArg.capture(), mailArg.capture())
-        assertEquals(AddressStatus.valid, statusArg.value)
+        //verify(validator).updateStatus(statusArg.capture(), mailArg.capture())
+
+        val statusArg = argumentCaptor<AddressStatus>()
+        verify(validator).updateStatus(statusArg.capture(), isNull())
+        assertEquals(AddressStatus.valid, statusArg.firstValue)
+
     }
+
+    enum class SomeEnum {
+        foo, bar
+    }
+
+    open class MyClass {
+        fun doSomething() {
+            magic(SomeEnum.foo)
+        }
+
+        internal fun magic(whatever: SomeEnum) {}
+    }
+
+    @Test
+    fun mockitoBug() {
+        val sut = spy(MyClass())
+        sut.doSomething()
+        verify(sut).magic(eq(SomeEnum.foo))
+    }
+
 
     @Test
     fun distanceCheck() {
