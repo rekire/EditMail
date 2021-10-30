@@ -33,32 +33,5 @@ public enum AddressStatus {
     /**
      * The mail address check is pending
      */
-    pending;
-
-    private String mail;
-
-    /**
-     * @return the suggested mail address.
-     */
-    public String getMailAddress() {
-        return mail;
-    }
-
-    /**
-     * Set the email address in case of a detected typo.
-     *
-     * @param mail The mail address which is guessed.
-     * @return this.
-     */
-    protected AddressStatus setMailAddress(String mail) {
-        this.mail = mail;
-        return this;
-    }
-
-    /**
-     * @return <code>true</code> if the email address is not valid or a typo was detected.
-     */
-    public boolean wrong() {
-        return this != valid && this != typoDetected;
-    }
+    pending
 }

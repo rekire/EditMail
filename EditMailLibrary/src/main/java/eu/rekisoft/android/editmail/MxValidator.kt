@@ -17,33 +17,36 @@ import java.util.*
 
 typealias Resolver = (String) -> MxValidator.ResolverResult
 
-open class MxValidator private constructor(builder: Builder): TextWatcher {
+open class MxValidator internal constructor(builder: Builder): TextWatcher {
     data class ResolverResult(val resultCount: Int, val notFound: Boolean)
 
-    private var resolv: Resolver = builder.resolver
+    @VisibleForTesting
+    internal var resolv: Resolver = builder.resolver
     private var currentInput: String? = null
     private val context: Context = builder.context
-    val status: LiveData<AddressStatus> = MutableLiveData(AddressStatus.unknown)
+    //val status: LiveData<AddressStatus> = MutableLiveData(AddressStatus.unknown)
 
     private var errorViewer: View? = builder.errorViewer
+
+    private fun typoCheck(domain: String) =
+        (customDomains + wellKnownDomains).firstOrNull { user ->
+            damerauLevenshteinDistance(user, domain, 128) == 1
+        }?.let { mail ->
+            updateStatus(AddressStatus.typoDetected, mail)
+        }
 
     private val mxLookup = LazyWorker.createLifeCycleAwareJob(builder.lifecycle) {
         val localCopy = currentInput
         localCopy?.domain?.let { domain ->
-            if (hasWellknownDomain(domain)) {
+            if (isWellKnownDomain(domain)) {
                 updateStatus(AddressStatus.valid)
             } else {
                 val response = resolv(domain)
                 when {
-                    response.notFound -> updateStatus(AddressStatus.notRegistered)
-                    response.resultCount == 0 -> updateStatus(AddressStatus.noMxRecord)
+                    response.notFound -> typoCheck(domain) ?: updateStatus(AddressStatus.notRegistered)
+                    response.resultCount == 0 -> typoCheck(domain) ?: updateStatus(AddressStatus.noMxRecord)
                     response.resultCount > 0 -> updateStatus(AddressStatus.valid)
-                    else ->
-                        (customDomains + wellKnownDomains).firstOrNull { user ->
-                            damerauLevenshteinDistance(user, domain, 128) == 1
-                        }?.let { mail ->
-                            updateStatus(AddressStatus.typoDetected, mail)
-                        } ?: updateStatus(AddressStatus.unknown)
+                    else -> updateStatus(AddressStatus.unknown)
                 }
             }
         } ?: updateStatus(AddressStatus.wrongSchema)
@@ -58,7 +61,7 @@ open class MxValidator private constructor(builder: Builder): TextWatcher {
     }
     override fun afterTextChanged(s: Editable) {
         currentInput = s.toString()
-        if (hasWellknownDomain(s.toString())) {
+        if (hasWellKnownDomain(s.toString())) {
             updateStatus(AddressStatus.valid)
         } else {
             // When the change is done set the internal status to pending and invoke doCheck delayed.
@@ -67,8 +70,13 @@ open class MxValidator private constructor(builder: Builder): TextWatcher {
         }
     }
 
+    fun validateMailAddress(emailAddress: String) {
+        currentInput = emailAddress
+        mxLookup.doNow()
+    }
+
     @VisibleForTesting
-    internal fun updateStatus(status: AddressStatus, mail: String? = null) {
+    internal open fun updateStatus(status: AddressStatus, mail: String? = null) {
         //(this.status as MutableLiveData).postValue(status)
         setError(when(status) {
             AddressStatus.pending,
@@ -133,10 +141,11 @@ open class MxValidator private constructor(builder: Builder): TextWatcher {
             } else null
         }
 
-        fun hasWellknownDomain(emailAddress: String) : Boolean =
-            emailAddress.domain?.let { domain ->
-                wellKnownDomains.contains(domain) || customDomains.contains(domain)
-            } ?: false
+        fun isWellKnownDomain(domain: String) =
+            wellKnownDomains.contains(domain) || customDomains.contains(domain)
+
+        fun hasWellKnownDomain(emailAddress: String) =
+            emailAddress.domain?.let(::isWellKnownDomain) ?: false
 
         val customDomains = mutableListOf<String>()
 
