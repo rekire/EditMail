@@ -94,7 +94,7 @@ public class EditMail extends EditText {
         CharSequence[] domains = a.getTextArray(R.styleable.EmailPreference_domains);
 
         if(domains != null) {
-            MailChecker.setDomainList((String[]) domains);
+            //MailChecker.setDomainList((String[]) domains);
         }
 
         a.recycle();

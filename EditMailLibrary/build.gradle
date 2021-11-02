@@ -46,7 +46,10 @@ dependencies {
     implementation 'eu.rekisoft.android.util:LazyWorker:2.0.3'
     implementation 'org.minidns:minidns-hla:1.0.1'
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation('com.google.android.material:material:1.4.0') {
+        exclude group: 'androidx.recyclerview', module: 'recyclerview'
+        exclude group: 'androidx.viewpager2', module: 'viewpager2'
+    }
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
     implementation "androidx.lifecycle:lifecycle-runtime:2.4.0"
     testImplementation 'junit:junit:4.13.2'

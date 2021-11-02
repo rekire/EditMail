@@ -9,11 +9,13 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import com.google.android.material.textfield.TextInputLayout
 import eu.rekisoft.android.util.LazyWorker
+import eu.rekisoft.android.util.ThreadingHelper
 import org.minidns.dnsmessage.DnsMessage
 import org.minidns.dnsmessage.Question
 import org.minidns.record.Record
 import java.net.IDN
 import java.util.*
+import java.util.concurrent.Executors
 
 typealias Resolver = (String) -> MxValidator.ResolverResult
 
@@ -35,18 +37,22 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
             updateStatus(AddressStatus.typoDetected, mail)
         }
 
+    private val executorService = Executors.newScheduledThreadPool(0)
+
     private val mxLookup = LazyWorker.createLifeCycleAwareJob(builder.lifecycle) {
         val localCopy = currentInput
         localCopy?.domain?.let { domain ->
             if (isWellKnownDomain(domain)) {
                 updateStatus(AddressStatus.valid)
             } else {
-                val response = resolv(domain)
-                when {
-                    response.notFound -> typoCheck(domain) ?: updateStatus(AddressStatus.notRegistered)
-                    response.resultCount == 0 -> typoCheck(domain) ?: updateStatus(AddressStatus.noMxRecord)
-                    response.resultCount > 0 -> updateStatus(AddressStatus.valid)
-                    else -> updateStatus(AddressStatus.unknown)
+                executorService.submit {
+                    val response = resolv(domain)
+                    when {
+                        response.notFound -> typoCheck(domain) ?: updateStatus(AddressStatus.notRegistered)
+                        response.resultCount == 0 -> typoCheck(domain) ?: updateStatus(AddressStatus.noMxRecord)
+                        response.resultCount > 0 -> updateStatus(AddressStatus.valid)
+                        else -> updateStatus(AddressStatus.unknown)
+                    }
                 }
             }
         } ?: updateStatus(AddressStatus.wrongSchema)
@@ -89,10 +95,19 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
         })
     }
 
+    private val handler by lazy { ThreadingHelper.createHandler() }
+
     private fun setError(error: String?) {
-        when(errorViewer) {
-            is EditText -> (errorViewer as EditText).error = error
-            is TextInputLayout -> (errorViewer as TextInputLayout).error = error
+        val update = {
+            when (errorViewer) {
+                is EditText -> (errorViewer as EditText).error = error
+                is TextInputLayout -> (errorViewer as TextInputLayout).error = error
+            }
+        }
+        if (ThreadingHelper.isOnMainThread) {
+            update()
+        } else {
+            handler.post { update() }
         }
     }
 
