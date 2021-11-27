@@ -1,10 +1,13 @@
 package eu.rekisoft.android.editmail
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.style.URLSpan
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.*
@@ -26,10 +29,11 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
     data class ResolverResult(val resultCount: Int, val notFound: Boolean)
 
     @VisibleForTesting
-    internal var resolv: Resolver = builder.resolver
+    internal var resolv = builder.resolver
     private var currentInput: String? = null
-    private val context: Context = builder.context
-    private var errorViewer: View? = builder.errorViewer
+    private val context = builder.context
+    private var errorViewer = builder.errorViewer
+    private val editText = builder.editText
 
     private fun typoCheck(domain: String) =
         (customDomains + wellKnownDomains).firstOrNull { user ->
@@ -95,7 +99,7 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
                 AddressStatus.valid -> null
                 AddressStatus.notRegistered -> context.getString(R.string.email_domain_unknown)
                 AddressStatus.noMxRecord -> context.getString(R.string.email_no_mx)
-                AddressStatus.typoDetected -> context.getString(R.string.email_did_you_mean, mail)
+                AddressStatus.typoDetected -> createClickableSuggestion(mail!!)
                 AddressStatus.wrongSchema -> null
             })
         }
@@ -108,13 +112,52 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
         }
     }
 
+    private fun createClickableSuggestion(domain: String) : CharSequence {
+        val hint = SpannableStringBuilder(context.getString(R.string.email_did_you_mean, domain))
+        val start = hint.indexOf(domain)
+        assert(start >= 0)
+        hint.setSpan(SuggestionSpan(domain), start, start + domain.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return hint
+    }
+
+    private inner class SuggestionSpan(private val domain: String) : URLSpan(domain) {
+        @SuppressLint("SetTextI18n")
+        override fun onClick(widget: View) {
+            editText?.let {
+                // get the user part of the email address
+                val userPart = editText.text.toString().substringBefore("@")
+                // check where the selection is, if the selection goes until the end move it to the
+                // end when it became longer
+                val start = editText.selectionStart
+                val end = editText.selectionEnd
+                val last = editText.text.length
+                val endWasAtEnd = end == last
+                val startWasAtEnd = start == last
+                // update mail address
+                editText.setText("$userPart@$domain")
+                // update selection
+                editText.setSelection(
+                        if (startWasAtEnd) editText.text.length else start,
+                        if (endWasAtEnd) editText.text.length else end)
+            }
+        }
+    }
+
     private val handler by lazy { ThreadingHelper.createHandler() }
 
-    private fun setError(error: String?) {
+    private fun setError(error: CharSequence?) {
         val update = {
             when (errorViewer) {
                 is EditText -> (errorViewer as EditText).error = error
-                is TextInputLayout -> (errorViewer as TextInputLayout).error = error
+                is TextInputLayout -> (errorViewer as TextInputLayout).apply {
+                    this.error = error
+                    findViewById<TextView>(R.id.textinput_error).apply {
+                        if (movementMethod !is LinkMovementMethod && linksClickable) {
+                            movementMethod = LinkMovementMethod.getInstance()
+                        }
+                    }
+                }
+                else -> throw IllegalArgumentException()
             }
         }
         if (ThreadingHelper.isOnMainThread) {
@@ -169,7 +212,7 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
         }
     }
 
-    class Builder {
+    class Builder @JvmOverloads constructor(val editText: EditText? = null) {
         internal lateinit var lifecycle: Lifecycle
         internal lateinit var context: Context
         internal var errorViewer: View? = null
@@ -204,7 +247,9 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
             }
         }
 
-        fun build() = MxValidator(this)
+        fun build() = MxValidator(this).also {
+            editText?.addTextChangedListener(it)
+        }
     }
 
     companion object {

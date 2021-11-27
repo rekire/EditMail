@@ -17,9 +17,7 @@ public class MainActivity extends FragmentActivity {
         EditText basic = findViewById(R.id.basic);
         TextInputLayout input = findViewById(R.id.input_layout);
         EditText nested = findViewById(R.id.nested);
-        MxValidator validator1 = new MxValidator.Builder().errorViewer(basic).build();
-        basic.addTextChangedListener(validator1);
-        MxValidator validator2 = new MxValidator.Builder().errorViewer(input).build();
-        nested.addTextChangedListener(validator2);
+        new MxValidator.Builder(basic).errorViewer(basic).build();
+        new MxValidator.Builder(nested).errorViewer(input).build();
     }
 }
