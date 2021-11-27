@@ -6,12 +6,14 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import androidx.annotation.VisibleForTesting
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.*
 import com.google.android.material.textfield.TextInputLayout
 import eu.rekisoft.android.util.LazyWorker
 import eu.rekisoft.android.util.ThreadingHelper
 import org.minidns.dnsmessage.DnsMessage
 import org.minidns.dnsmessage.Question
+import org.minidns.record.MX
 import org.minidns.record.Record
 import java.net.IDN
 import java.util.*
@@ -26,8 +28,6 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
     internal var resolv: Resolver = builder.resolver
     private var currentInput: String? = null
     private val context: Context = builder.context
-    //val status: LiveData<AddressStatus> = MutableLiveData(AddressStatus.unknown)
-
     private var errorViewer: View? = builder.errorViewer
 
     private fun typoCheck(domain: String) =
@@ -55,18 +55,22 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
                     }
                 }
             }
-        } ?: updateStatus(AddressStatus.wrongSchema)
+        } ?: if (localCopy.isNullOrBlank())
+            updateStatus(AddressStatus.unknown)
+        else
+            updateStatus(AddressStatus.wrongSchema)
     }
 
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-        // remove all error states on text changes.
         updateStatus(AddressStatus.pending)
         setError(null)
     }
-    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-    }
+
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
     override fun afterTextChanged(s: Editable) {
         currentInput = s.toString()
+        reset()
         if (hasWellKnownDomain(s.toString())) {
             updateStatus(AddressStatus.valid)
         } else {
@@ -83,16 +87,24 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
 
     @VisibleForTesting
     internal open fun updateStatus(status: AddressStatus, mail: String? = null) {
-        //(this.status as MutableLiveData).postValue(status)
-        setError(when(status) {
-            AddressStatus.pending,
-            AddressStatus.unknown -> null
-            AddressStatus.valid -> null
-            AddressStatus.notRegistered -> context.getString(R.string.email_domain_unknown)
-            AddressStatus.noMxRecord -> context.getString(R.string.email_no_mx)
-            AddressStatus.typoDetected -> context.getString(R.string.email_did_you_mean, mail)
-            AddressStatus.wrongSchema -> context.getString(R.string.email_schema_error)
-        })
+        mxLookup.doLater(1000) {
+            setError(when (status) {
+                AddressStatus.pending,
+                AddressStatus.unknown -> null
+                AddressStatus.valid -> null
+                AddressStatus.notRegistered -> context.getString(R.string.email_domain_unknown)
+                AddressStatus.noMxRecord -> context.getString(R.string.email_no_mx)
+                AddressStatus.typoDetected -> context.getString(R.string.email_did_you_mean, mail)
+                AddressStatus.wrongSchema -> null
+            })
+        }
+        if (status == AddressStatus.valid) {
+            markAsValid()
+        } else if (status == AddressStatus.wrongSchema) {
+            mxLookup.doLater(3000) {
+                setError(context.getString(R.string.email_address_incomplete))
+            }
+        }
     }
 
     private val handler by lazy { ThreadingHelper.createHandler() }
@@ -102,6 +114,51 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
             when (errorViewer) {
                 is EditText -> (errorViewer as EditText).error = error
                 is TextInputLayout -> (errorViewer as TextInputLayout).error = error
+            }
+        }
+        if (ThreadingHelper.isOnMainThread) {
+            update()
+        } else {
+            handler.post { update() }
+        }
+    }
+
+    private val icon by lazy {
+        ResourcesCompat.getDrawable(errorViewer!!.resources, R.drawable.ic_valid, null)?.apply {
+            setBounds(0,0, intrinsicWidth, intrinsicHeight)
+        }
+    }
+
+    private fun markAsValid() {
+        val update = {
+            when (errorViewer) {
+                is EditText -> with(errorViewer as EditText) {
+                    setCompoundDrawables(null, null, icon, null)
+                }
+                is TextInputLayout -> with(errorViewer as TextInputLayout) {
+                    endIconDrawable = icon
+                    isEndIconVisible = true
+                }
+            }
+        }
+        if (ThreadingHelper.isOnMainThread) {
+            update()
+        } else {
+            handler.post { update() }
+        }
+    }
+
+    private fun reset() {
+        val update = {
+            when (errorViewer) {
+                is EditText -> with(errorViewer as EditText) {
+                    setCompoundDrawables(null, null, null, null)
+                    error = null
+                }
+                is TextInputLayout -> with(errorViewer as TextInputLayout) {
+                    endIconDrawable = null
+                    error = null
+                }
             }
         }
         if (ThreadingHelper.isOnMainThread) {
@@ -139,7 +196,9 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
             val result = dohResolver.query(Question(domain, Record.TYPE.MX))
             return when {
                 result.response.responseCode == DnsMessage.RESPONSE_CODE.NX_DOMAIN -> ResolverResult(0, notFound = true)
-                result.wasSuccessful() -> ResolverResult(result.response.answerSection.size, notFound = false)
+                result.wasSuccessful() -> ResolverResult(result.response.answerSection.count {
+                    (it.payload as MX).target.ace.lowercase(Locale.ENGLISH) != "localhost" // TODO check if MX-Server exists
+                }, notFound = false)
                 else -> ResolverResult(-1, notFound = false)
             }
         }

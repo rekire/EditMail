@@ -6,6 +6,7 @@ import androidx.lifecycle.Lifecycle
 import eu.rekisoft.android.util.ThreadingHelper
 import org.junit.Assert.*
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import org.minidns.dnsmessage.DnsMessage.RESPONSE_CODE
 import org.minidns.dnsmessage.Question
@@ -65,6 +66,7 @@ class MxValidatorTest {
         }
     }
 
+    @Ignore
     @Test
     fun evaluating() {
         val cases = mapOf(

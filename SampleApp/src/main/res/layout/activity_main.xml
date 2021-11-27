@@ -17,10 +17,12 @@
         android:layout_height="wrap_content"
         android:text="@string/intro" />
 
-    <eu.rekisoft.android.editmail.EditMail
+    <EditText
         android:id="@+id/basic"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:autofillHints="emailAddress"
+        android:hint="E-Mail Adresse"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"/>
 
@@ -32,8 +34,10 @@
         android:layout_marginBottom="8dp"
         app:errorEnabled="true">
 
-        <eu.rekisoft.android.editmail.EditMail
+        <EditText
             android:id="@+id/nested"
+            android:autofillHints="emailAddress"
+            android:hint="E-Mail Adresse"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
