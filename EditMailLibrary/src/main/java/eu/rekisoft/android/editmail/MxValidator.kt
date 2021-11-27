@@ -15,6 +15,7 @@ import org.minidns.dnsmessage.DnsMessage
 import org.minidns.dnsmessage.Question
 import org.minidns.record.MX
 import org.minidns.record.Record
+import java.lang.IllegalArgumentException
 import java.net.IDN
 import java.util.*
 import java.util.concurrent.Executors
@@ -211,7 +212,11 @@ open class MxValidator internal constructor(builder: Builder): TextWatcher {
         get() {
             val atPosition = indexOf("@")
             return if (atPosition >= 1 && length > atPosition + 1) {
-                IDN.toASCII(substring(atPosition + 1).lowercase(Locale.US))
+                try {
+                    IDN.toASCII(substring(atPosition + 1).lowercase(Locale.US))
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
             } else null
         }
 
