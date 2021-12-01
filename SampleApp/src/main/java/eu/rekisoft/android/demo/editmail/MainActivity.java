@@ -1,7 +1,9 @@
 package eu.rekisoft.android.demo.editmail;
 
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -19,5 +21,7 @@ public class MainActivity extends FragmentActivity {
         EditText nested = findViewById(R.id.nested);
         new MxValidator.Builder(basic).errorViewer(basic).build();
         new MxValidator.Builder(nested).errorViewer(input).build();
+        TextView privacy = findViewById(R.id.privacy);
+        privacy.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

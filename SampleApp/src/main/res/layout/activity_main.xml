@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:autofillHints="emailAddress"
-        android:hint="E-Mail Adresse"
+        android:hint="@string/emailAddress"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:inputType="textEmailAddress" />
@@ -41,7 +41,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:hint="E-Mail Adresse"
+        android:hint="@string/emailAddress"
         app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -55,6 +55,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/privacy"
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:text="@string/notes" />
 

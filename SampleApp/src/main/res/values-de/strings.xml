@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">EditMail Demo</string>
-    <string name="intro">Willkommen in dieser Demo App.\nBitte gebe eine E-Mail Adresse ein:</string>
-    <string name="notes"><b>Zum Datenschutz:</b> Keine Eingaben werden übertragen oder gespeichert. Es ist jedoch möglich das dein Internetanbieter oder dein Netzwerkadministrator DNS anfragen sieht, dass ist otwendig um zu überprüfen ob die Domain existiert und ob diese E-Mails empfangen kann.</string>
+    <string name="intro">Willkommen in dieser Demo App.\nBitte gebe eine E-Mail Adresse zum Testen ein:</string>
+    <string name="notes"><b>Zum Datenschutz:</b> Es werden weder Eingaben gespeichert, noch die eingegeben E-Mail Adresse jemals übertragen. Es wird nach jeder Eingabe ein zufälliger DNS-Server von  <a href="https://dns.google/">Google</a>, <a href="https://developers.cloudflare.com/1.1.1.1/encrypted-dns/dns-over-https/dns-over-https-client">Cloudflare</a> or <a href="https://www.quad9.net/news/blog/doh-with-quad9-dns-servers">Quad9</a> bei dem Angefragt wird ob die Domain prinzipiell E-Mails empfangen kann. Diese Abfragen sind durch HTTPS geschützt und können daher nicht von dritten eingesehen werden.</string>
+    <string name="emailAddress">E-Mail Adresse</string>
 </resources>
